@@ -1,0 +1,6 @@
+moviepy==1.0.3
+Pillow==10.0.0
+Pyrogram==2.0.106
+requests==2.31.0
+TgCrypto==1.2.5
+tqdm==4.66.1
