@@ -11,6 +11,7 @@ BOT_TOKEN = "6092647706:AAFsAE0KgBwJl7h8mBDPVtqILHjEr0CwnPs"
 
 
 DOWNLOAD_LOCATION = os.environ.get("DOWNLOAD_LOCATION", "./DOWNLOADS")
+BOT_TOKEN = os.environ.get("DOWNLOAD_LOCATION", BOT_TOKEN)
 
 
 if __name__ == "__main__":
