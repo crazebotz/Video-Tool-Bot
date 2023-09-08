@@ -1,5 +1,6 @@
 import shutil
 import re
+import os
 import json
 import time
 from pyrogram import Client, filters
@@ -16,7 +17,7 @@ pattern = r'\((\d+),\s*(\d+)\)'
 
 @Client.on_message(filters.video & filters.incoming)
 async def send_back_video(_, msg: Message):
-    await msg.copy(msg.from_user.id, msg.caption)
+    await msg.copy(msg.from_user.id, f"{msg.video.duration}\n{msg.video.file_name}")
     await msg.delete()
 
 
@@ -50,12 +51,6 @@ def generate_time_ranges(input_str):
 
     return tuples_list
 
-# input_str = "20:16 21:24"
-# output = generate_time_ranges(input_str)
-# print(output)
-
-
-
 
 @Client.on_message(filters.incoming & filters.text & filters.regex(message_pattern))
 async def trim_vid_cmd(bot: Client, msg: Message):
@@ -63,7 +58,8 @@ async def trim_vid_cmd(bot: Client, msg: Message):
         if not msg.reply_to_message.caption:
             return await msg.reply_text("`/edit Name`")
 
-        file_name = msg.reply_to_message.caption
+        file_name = msg.reply_to_message.video.file_name
+        file_name, file_extension = os.path.splitext(file_name)
         matches = re.findall(pattern, msg.text)
 
         result_list = [(int(match[0]), int(match[1])) for match in matches]
