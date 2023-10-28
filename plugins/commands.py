@@ -59,10 +59,12 @@ async def trim_vid_cmd(bot: Client, msg: Message):
             return await msg.reply_text("`/edit Name`")
 
         file_name = msg.reply_to_message.video.file_name
-        file_name, file_extension = os.path.splitext(file_name)
+        file_name, _ = os.path.splitext(file_name)
+        episode = (int(msg.text.split("#")[0]))
         matches = re.findall(pattern, msg.text)
 
         result_list = [(int(match[0]), int(match[1])) for match in matches]
+
         user_id = msg.from_user.id
 
         dir_path, status_file = await create_random_dirs(user_id)
@@ -76,7 +78,7 @@ async def trim_vid_cmd(bot: Client, msg: Message):
 
         input_video = await msg.reply_to_message.download(f"{dir_path}/{file_name}.mp4", progress=progress_for_pyrogram, progress_args=(bot, "Downloading...", sent_message, d_start, status_file))
 
-        videos_path = await trim_video(dir_path, input_video, file_name, result_list)
+        videos_path = await trim_video(dir_path, input_video, file_name, result_list, episode)
         index = 1
 
         for video in videos_path:
@@ -90,7 +92,9 @@ async def trim_vid_cmd(bot: Client, msg: Message):
             except:
                 video_duration = None
 
-            await msg.reply_video(video, caption=f"{file_name}{index}", quote=True, duration=video_duration, width=width, height=height, thumb=ss_path, progress=progress_for_pyrogram, progress_args=(bot, "Uploading...", sent_message, u_start, status_file))
+            vid_name = video.split("/")[-1]
+
+            await msg.reply_video(video, caption=f"{vid_name}", quote=True, duration=video_duration, width=width, height=height, thumb=ss_path, progress=progress_for_pyrogram, progress_args=(bot, "Uploading...", sent_message, u_start, status_file))
             index += 1
 
         shutil.rmtree(dir_path)
