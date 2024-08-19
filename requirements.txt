@@ -4,3 +4,5 @@ Pyrogram==2.0.106
 requests==2.31.0
 TgCrypto==1.2.5
 tqdm==4.66.1
+Flask==2.3.2
+gunicorn
